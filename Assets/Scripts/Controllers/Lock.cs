@@ -10,10 +10,14 @@ public class Lock : MonoBehaviour
 
     [Header("Settings")]
     public ColorType colorType = ColorType.Blue;
+
+    [Header("Slot Key")]
     public Key slotKey;
 
     [Header("Others")]
     [SerializeField] private Transform headTransform;
+    [SerializeField] private ParticleSystem threeStepsLeftEffect;
+    [SerializeField] private ParticleSystem openEffect;
     [SerializeField] private List<LockHole> holes;
 
     [Header("Colored Parts")]
@@ -53,16 +57,105 @@ public class Lock : MonoBehaviour
     private void Update()
     {
 #if UNITY_EDITOR
-        if(parts != null)
+        //if(slotKey == null && slotKeyColor != ColorType.None)
+        //{
+        //    Transform parentTransform = GameObject.Find("Location/Keys").transform;
+        //    Vector3 keyPosition = transform.position + new Vector3(.3f, .75f, 0);
+        //    Key slotKeyPrefab = Resources.Load<Key>("Prefabs/Keys/Key" + holes.Count);
+        //    Key newKey = Instantiate(slotKeyPrefab, keyPosition, Quaternion.identity, parentTransform);
+        //    Quaternion keyRotation = new Quaternion();
+        //    keyRotation.eulerAngles = new Vector3(15f, 165f, -90f);
+        //    newKey.transform.rotation = keyRotation;
+        //    newKey.colorType = slotKeyColor;
+        //    newKey.name = newKey.colorType + " Key";
+        //    slotKey = newKey;
+        //}
+        //else if(slotKey.colorType != slotKeyColor)
+        //{
+        //    slotKey.colorType = slotKeyColor;
+        //}
+
+        if (parts != null)
         {
             Material material = Resources.Load<Material>("Materials/" + colorType.ToString() + " Color Material");
             parts.ForEach(t => t.material = material);
+            name = colorType.ToString() + " Lock";
         }
 #endif
     }
 
     #region Main Logic
 
+    public bool AreAllKeysTheSameBaseColor()
+    {
+        if(holes.Count > 0)
+        {
+            foreach(LockHole lockHole in holes)
+            {
+                if(lockHole.Key)
+                {
+                    if (lockHole.Key.colorType == colorType)
+                    {
+                        continue;
+                    }
+                    else
+                    {
+                        return false;     
+                    }
+                }
+            }
+        }
+
+        return true;
+    }
+    public bool HasFreeHoles()
+    {
+        if(holes.Find(t => !t.Key))
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+    public bool LastLockHoleKeyColorTypeEqualsLockColorType()
+    {
+        LockHole lockHole;
+        if (holes.Count > 0)
+        {
+            if(holes.Find(t => t.Key))
+            {
+                for (int i = holes.Count - 1; i >= 0; i--)
+                {
+                    lockHole = holes[i];
+                    if (lockHole.Key && lockHole.Key.colorType == colorType)
+                    {
+                        return true;
+                    }
+                }
+            }
+            else
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+    public int GetAmountOfEmptyLockHoles()
+    {
+        int amount = 0;
+        foreach(LockHole lockHole in holes)
+        {
+            if (!lockHole.Key)
+            {
+                amount++;
+            }
+        }
+
+        return amount;
+    }
     public Key GetSelectedKey()
     {
         selectedKey = null;
@@ -90,6 +183,26 @@ public class Lock : MonoBehaviour
         }
 
         return selectedKey;
+    }
+    public List<Key> GetFreeKeys()
+    {
+        List<Key> keys = new List<Key>();
+        if(slotKey && slotKey.IsFree)
+        {
+            keys.Add(slotKey);
+        }
+        else
+        {
+            foreach (LockHole hole in holes)
+            {
+                if (hole.Key && hole.Key.IsFree)
+                {
+                    keys.Add(hole.Key);
+                }
+            }
+        }
+
+        return keys;
     }
     public LockHole GetLockHole(Key key)
     {
@@ -121,39 +234,6 @@ public class Lock : MonoBehaviour
         }
 
         return null;
-    }
-    public List<Key> GetFreeKeys()
-    {
-        List<Key> keys = new List<Key>();
-        if(slotKey && slotKey.IsFree)
-        {
-            keys.Add(slotKey);
-        }
-        else
-        {
-            foreach (LockHole hole in holes)
-            {
-                if (hole.Key && hole.Key.IsFree)
-                {
-                    keys.Add(hole.Key);
-                }
-            }
-        }
-
-        return keys;
-    }
-    private int GetAmountOfEmptyLockHoles()
-    {
-        int amount = 0;
-        foreach(LockHole lockHole in holes)
-        {
-            if (!lockHole.Key)
-            {
-                amount++;
-            }
-        }
-
-        return amount;
     }
 
     public void AddSelectedKey(Key newKey)
@@ -197,10 +277,26 @@ public class Lock : MonoBehaviour
             }
         }
     }
+    public void ToggleOutline(bool state)
+    {
+        if (slotKey)
+        {
+            slotKey.ToggleOutline(state);
+        }
+
+        foreach(LockHole lockHole in holes)
+        {
+            if (lockHole.Key)
+            {
+                lockHole.Key.ToggleOutline(state);
+            }
+        }
+    }
 
     #endregion
 
     #region Animations
+
     public void OpeningLockWithSelectedLockAnimation()
     {
         Sequence sequence = DOTween.Sequence();
@@ -210,20 +306,20 @@ public class Lock : MonoBehaviour
         bool shouldLockBeOpened = !isKeyRelated && GetAmountOfEmptyLockHoles() < 2;
         LockHole lockHole = GetLockHole(isKeyRelated ? currentKey : null);
         Vector3 positionValue = new Vector3(lockHole.transform.position.x, lockHole.transform.position.y, lockHole.transform.position.z - 1f);
-        Vector3 headRotationValue = new Vector3(0, 360f, 0);
+        Vector3 headRotationValue = new Vector3(90, 0, 360f);
         Vector3 keyRotationValue1 = new Vector3(180f, 180f, -180f);
         Quaternion keyRotationValue2 = new Quaternion();
         keyRotationValue2.eulerAngles = new Vector3(keyRotationValue1.x, keyRotationValue1.y, 360f);
         sequence
             .OnStart(() =>
             {
-                if (GameManager.Instance.IsLastMove())
+                if (GameManager.Instance.IsLastLockToOpen())
                 {
                     isAboutToBeUnlocked = true;
                     GameManager.Instance.TogglePrewinning(true);
                 }
 
-                GameManager.Instance.IncreaseMovesAmount();
+                VibrationManager.Instance.SetHaptic(MoreMountains.NiceVibrations.HapticTypes.LightImpact);
                 Vector3 lockHolePosition = lockHole.transform.position;
                 currentKey.StartPosition = positionValue;
                 currentKey.StartRotation = keyRotationValue2.eulerAngles;
@@ -234,6 +330,7 @@ public class Lock : MonoBehaviour
 
                 if (shouldLockBeOpened)
                 {
+                    ToggleEffect(false);
                     foreach(LockHole hole in holes)
                     {
                         if (hole.Key)
@@ -247,11 +344,6 @@ public class Lock : MonoBehaviour
                     }
 
                     isLocked = false;
-                    VibrationManager.Instance.SetHaptic(MoreMountains.NiceVibrations.HapticTypes.MediumImpact);
-                }
-                else
-                {
-                    VibrationManager.Instance.SetHaptic(MoreMountains.NiceVibrations.HapticTypes.LightImpact);
                 }
             })
             .Append(currentKey.transform.DOMove(positionValue, openingAnimDuration))
@@ -265,10 +357,16 @@ public class Lock : MonoBehaviour
         if (shouldLockBeOpened)
         {
             sequence
+                .AppendCallback(() =>
+                {
+                    openEffect.Play();
+                    VibrationManager.Instance.SetHaptic(MoreMountains.NiceVibrations.HapticTypes.MediumImpact);
+                })
                 .Append(headTransform.DORotate(headRotationValue, openingAnimDuration, RotateMode.Fast))
                 .OnComplete(() =>
                 {
-                    if (GameManager.Instance.IsLastMove() && isAboutToBeUnlocked)
+                    
+                    if (isAboutToBeUnlocked)
                     {
                         GameManager.Instance.TogglePrewinning(false);
                     }
@@ -305,6 +403,27 @@ public class Lock : MonoBehaviour
         .Append(selectedKey.transform.DORotate(selectedKey.StartRotation, selectionAnimDuration, RotateMode.Fast))
         .Join(selectedKey.transform.DOMove(selectedKey.StartPosition, selectionAnimDuration));
      
+    }
+
+    public void ToggleEffect(bool state)
+    {
+        if (!threeStepsLeftEffect) return;
+
+        if (state)
+        {
+            if (!threeStepsLeftEffect.isPlaying)
+            {
+                threeStepsLeftEffect.Simulate(1.75f);
+                threeStepsLeftEffect.Play(true);
+            }
+        }
+        else
+        {
+            if (!threeStepsLeftEffect.isStopped)
+            {
+                threeStepsLeftEffect.Stop();
+            }
+        }
     }
 
     #endregion

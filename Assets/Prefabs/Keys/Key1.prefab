@@ -365,6 +365,7 @@ GameObject:
   - component: {fileID: 8716266555723508995}
   - component: {fileID: 8014142212829278595}
   - component: {fileID: 8014142212829278592}
+  - component: {fileID: -5948594992235802852}
   m_Layer: 0
   m_Name: Key1
   m_TagString: Untagged
@@ -423,7 +424,8 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 9fcf7edaffaea4f42aa7578da906e74c, type: 2}
+  - {fileID: 2100000, guid: 2a51a007931ce2845b334fc838bae71a, type: 2}
+  - {fileID: 2100000, guid: edf96e4ea06431f43bfcfa3b6a13e35c, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -473,10 +475,28 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 03b9edbe920e7494daf3bbb0df4a26b3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  colorType: 4
+  colorType: 1
   rb: {fileID: 8014142212829278595}
   parts:
   - {fileID: 8716266555723508995}
+--- !u!114 &-5948594992235802852
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7203114186504391894}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5fea29bb7c508c244a1f805a5fd3fc4d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  outlineMode: 1
+  outlineColor: {r: 0.2509804, g: 0.2509804, b: 0.2509804, a: 1}
+  outlineWidth: 2
+  precomputeOutline: 0
+  bakeKeys: []
+  bakeValues: []
 --- !u!1 &7539684986226939710
 GameObject:
   m_ObjectHideFlags: 0

@@ -189,6 +189,7 @@ GameObject:
   - component: {fileID: 5257094452699999307}
   - component: {fileID: 6860501950719242483}
   - component: {fileID: 6860501950719242444}
+  - component: {fileID: -7173249970087551862}
   m_Layer: 0
   m_Name: Key3
   m_TagString: Untagged
@@ -203,7 +204,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6049477779260673438}
-  m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 3.44, y: 1.4, z: 1.6033735}
   m_LocalScale: {x: 0.35, y: 0.35, z: 0.35}
   m_Children:
@@ -243,7 +244,8 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: e2e69337c0c96234b8479ee262e5a638, type: 2}
+  - {fileID: 2100000, guid: 2a51a007931ce2845b334fc838bae71a, type: 2}
+  - {fileID: 2100000, guid: edf96e4ea06431f43bfcfa3b6a13e35c, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -297,6 +299,24 @@ MonoBehaviour:
   rb: {fileID: 6860501950719242483}
   parts:
   - {fileID: 5257094452699999307}
+--- !u!114 &-7173249970087551862
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6049477779260673438}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5fea29bb7c508c244a1f805a5fd3fc4d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  outlineMode: 1
+  outlineColor: {r: 0.2509804, g: 0.2509804, b: 0.2509804, a: 1}
+  outlineWidth: 2
+  precomputeOutline: 0
+  bakeKeys: []
+  bakeValues: []
 --- !u!1 &6279639528880836213
 GameObject:
   m_ObjectHideFlags: 0

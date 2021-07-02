@@ -7,7 +7,7 @@ public class RestartButton : InteractableButton
     {
         if(canvasGroup.alpha != 0)
         {
-            GameManager.Instance.Restart();
+            GameManager.Instance.RestartLevel();
         }
     }
 }

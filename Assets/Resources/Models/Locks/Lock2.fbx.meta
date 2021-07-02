@@ -1,9 +1,19 @@
 fileFormatVersion: 2
-guid: 250fbc52e8580024d88df4aef9ffa44d
+guid: 3d27a4c303ff6314c8aa800b2d076bc0
 ModelImporter:
   serializedVersion: 20200
   internalIDToNameTable: []
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: dark.001
+    second: {fileID: 2100000, guid: 1528751ed71c3cf4dafac0c9994d7914, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: gold.001
+    second: {fileID: 2100000, guid: 0f85118827120894eab56c2f44157a70, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0
@@ -31,7 +41,7 @@ ModelImporter:
     extraExposedTransformPaths: []
     extraUserProperties: []
     clipAnimations: []
-    isReadable: 0
+    isReadable: 1
   meshes:
     lODScreenPercentages: []
     globalScale: 1

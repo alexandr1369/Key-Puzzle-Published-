@@ -7,7 +7,7 @@ public class ContinueButton : InteractableButton
     {
         if(canvasGroup.alpha != 0)
         {
-            GameManager.Instance.Restart();
+            GameManager.Instance.LoadNextLevel(null);
         }
     }
 }

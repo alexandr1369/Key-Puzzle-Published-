@@ -14,17 +14,17 @@ public class GameManager : MonoBehaviour
     {
         Instance = this;
 
-        currentLevel = PlayerPrefs.GetInt("_keyPuzzleLevel");
-        if (currentLevel == 0)
-        {
-            currentLevel = 1;
-            PlayerPrefs.SetInt("_keyPuzzleLevel", currentLevel);
-        }
-        else if (currentLevel - 1 != SceneManager.GetActiveScene().buildIndex)
-        {
-            //print(currentLevel + " " + SceneManager.GetActiveScene().buildIndex);
-            LoadNextLevel(currentLevel);
-        }
+        //currentLevel = PlayerPrefs.GetInt("_keyPuzzleLevel");
+        //if (currentLevel == 0)
+        //{
+        //    currentLevel = 1;
+        //    PlayerPrefs.SetInt("_keyPuzzleLevel", currentLevel);
+        //}
+        //else if (currentLevel - 1 != SceneManager.GetActiveScene().buildIndex)
+        //{
+        //    //print(currentLevel + " " + SceneManager.GetActiveScene().buildIndex);
+        //    LoadNextLevel(currentLevel);
+        //}
     }
 
     #endregion
